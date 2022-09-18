@@ -160,6 +160,7 @@ template<typename ILhs, typename IRhs>
 struct registry_context {
     template<typename Type, typename... Args>
     Type &emplace_hint(const id_type id, Args &&...args) {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         return any_cast<Type &>(data.try_emplace(id, std::in_place_type<Type>, std::forward<Args>(args)...).first->second);
     }
 
@@ -170,34 +171,40 @@ struct registry_context {
 
     template<typename Type>
     bool erase(const id_type id = type_id<Type>().hash()) {
+        ENTT_REGISTRY_CONTEXT_GUARD()
         const auto it = data.find(id);
         return it != data.end() && it->second.type() == type_id<Type>() ? (data.erase(it), true) : false;
     }
 
     template<typename Type>
     [[nodiscard]] std::add_const_t<Type> &at(const id_type id = type_id<Type>().hash()) const {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         return any_cast<std::add_const_t<Type> &>(data.at(id));
     }
 
     template<typename Type>
     [[nodiscard]] Type &at(const id_type id = type_id<Type>().hash()) {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         return any_cast<Type &>(data.at(id));
     }
 
     template<typename Type>
     [[nodiscard]] std::add_const_t<Type> *find(const id_type id = type_id<Type>().hash()) const {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         const auto it = data.find(id);
         return it != data.cend() ? any_cast<std::add_const_t<Type>>(&it->second) : nullptr;
     }
 
     template<typename Type>
     [[nodiscard]] Type *find(const id_type id = type_id<Type>().hash()) {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         const auto it = data.find(id);
         return it != data.end() ? any_cast<Type>(&it->second) : nullptr;
     }
 
     template<typename Type>
     [[nodiscard]] bool contains(const id_type id = type_id<Type>().hash()) const {
+        ENTT_REGISTRY_CONTEXT_GUARD();
         const auto it = data.find(id);
         return it != data.end() && it->second.type() == type_id<Type>();
     }
