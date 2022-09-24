@@ -178,26 +178,22 @@ struct registry_context {
 
     template<typename Type>
     [[nodiscard]] std::add_const_t<Type> &at(const id_type id = type_id<Type>().hash()) const {
-        ENTT_REGISTRY_CONTEXT_GUARD();
         return any_cast<std::add_const_t<Type> &>(data.at(id));
     }
 
     template<typename Type>
     [[nodiscard]] Type &at(const id_type id = type_id<Type>().hash()) {
-        ENTT_REGISTRY_CONTEXT_GUARD();
         return any_cast<Type &>(data.at(id));
     }
 
     template<typename Type>
     [[nodiscard]] std::add_const_t<Type> *find(const id_type id = type_id<Type>().hash()) const {
-        ENTT_REGISTRY_CONTEXT_GUARD();
         const auto it = data.find(id);
         return it != data.cend() ? any_cast<std::add_const_t<Type>>(&it->second) : nullptr;
     }
 
     template<typename Type>
     [[nodiscard]] Type *find(const id_type id = type_id<Type>().hash()) {
-        ENTT_REGISTRY_CONTEXT_GUARD();
         const auto it = data.find(id);
         return it != data.end() ? any_cast<Type>(&it->second) : nullptr;
     }
